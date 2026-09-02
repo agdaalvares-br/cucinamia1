@@ -307,7 +307,7 @@ garcons.forEach(g=>{
 });
 new Chart(document.getElementById('chartTurno'),{
   type:'doughnut',
-  data:{labels:['Noite','Dia','Não definido'],
+  data:{labels:['Noite','Dia'],
     datasets:[{data:[turnos.NOITE,turnos.DIA,turnos['—']],
       backgroundColor:['#4A6B4A','#C8A882','#A8C5A0'],
       borderColor:'#FAF7F2',borderWidth:2,hoverOffset:6}]},
