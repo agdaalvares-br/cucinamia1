@@ -2,256 +2,378 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Vendas — Cucina Mia 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Comissões Garçons — Cucina Mia Ago/26</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --bg:#F2EDE4;--bg2:#FAF7F2;--bg3:#EDE6D9;--border:#D6CBBA;
-    --accent:#6B8F6B;--accent-dark:#4A6B4A;--accent-light:#A8C5A0;
-    --red:#B85C5C;--text:#3D2B1F;--muted:#8C7B6B;
-    --card-shadow:0 2px 12px rgba(61,43,31,.08);
-    --font-display:'Cormorant Garamond',serif;
-    --font-body:'DM Sans',sans-serif;--font-mono:'DM Mono',monospace;
-  }
-  body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh}
-  .page-header{background:var(--accent-dark);border-bottom:3px solid var(--accent);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
-  .brand{display:flex;align-items:center;gap:14px}
-  .logo-mark{width:40px;height:40px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;color:var(--accent-dark);font-weight:700;border:2px solid var(--accent-light);text-align:center;line-height:1.1}
-  .page-header h1{font-family:var(--font-display);font-size:26px;letter-spacing:4px;color:#FAF7F2;line-height:1;font-weight:600}
-  .page-header .subtitle{font-size:10px;color:var(--accent-light);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
-  .header-meta{display:flex;align-items:center;gap:14px}
-  .badge{font-size:10px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:.5px}
-  .badge-green{background:rgba(168,197,160,.2);color:#C8E0C0;border:1px solid rgba(168,197,160,.4)}
-  .badge-beige{background:rgba(242,237,228,.15);color:#EDE6D9;border:1px solid rgba(242,237,228,.3)}
-  .period{font-size:11px;color:var(--accent-light);font-family:var(--font-mono)}
-  .container{padding:24px 28px;max-width:1400px;margin:0 auto}
-  .grid-2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px}
-  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
-  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
-  .kpi{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden;box-shadow:var(--card-shadow);transition:border-color .2s,transform .2s}
-  .kpi:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
-  .kpi-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px}
-  .kpi-value{font-family:var(--font-display);font-size:34px;letter-spacing:1px;color:var(--accent-dark);line-height:1;font-weight:700}
-  .kpi-value.sm{font-size:20px;padding-top:4px;font-weight:600}
-  .kpi-delta{font-size:11px;margin-top:8px;display:flex;align-items:center;gap:5px;font-weight:500}
-  .up{color:var(--accent-dark)}.dn{color:var(--red)}
-  .kpi-icon{position:absolute;right:14px;top:12px;font-size:26px;opacity:.35}
-  .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:var(--card-shadow)}
-  .card-title{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:10px}
-  .card-title span{font-family:var(--font-mono);font-size:10px;color:var(--accent-dark);background:rgba(107,143,107,.1);padding:2px 8px;border-radius:4px}
-  .chart-wrap{position:relative}
-  .top10-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);transition:background .15s;cursor:default}
-  .top10-row:last-child{border-bottom:none}
-  .top10-row:hover{background:rgba(107,143,107,.05);border-radius:6px;padding-left:6px}
-  .top10-rank{font-size:10px;color:var(--accent);width:18px;font-family:var(--font-mono);font-weight:500}
-  .top10-name{font-size:11px;color:var(--text);flex:1;padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .top10-val{font-size:11px;color:var(--accent-dark);font-weight:600;font-family:var(--font-mono)}
-  .top10-bar{height:2px;background:var(--border);border-radius:1px;margin-top:2px}
-  .top10-bar-fill{height:100%;border-radius:1px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
-  .mom-row{margin-bottom:11px}
-  .mom-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-  .mom-label{font-size:10px;color:var(--text);font-weight:500}
-  .mom-vals{display:flex;align-items:center;gap:6px;font-size:10px;font-family:var(--font-mono)}
-  .mom-mar{color:var(--muted)}.mom-arrow{color:var(--muted);font-size:9px}
-  .mom-abr{color:var(--text);font-weight:600}
-  .mom-pct{font-size:11px;font-weight:700;min-width:46px;text-align:right}
-  .mom-track{width:100%;background:var(--border);border-radius:3px;height:5px;overflow:hidden}
-  .mom-fill{height:100%;border-radius:3px}
-  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-  .leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
-  .leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-  .footer{border-top:1px solid var(--border);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted);margin-top:8px;background:var(--bg3)}
-  .footer strong{color:var(--accent-dark)}
-  #tip{position:fixed;background:var(--accent-dark);color:#FAF7F2;font-size:11px;padding:8px 12px;border-radius:8px;border:1px solid var(--accent);pointer-events:none;display:none;z-index:9999;white-space:pre;line-height:1.7;box-shadow:0 8px 24px rgba(61,43,31,.2)}
-  @media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.grid-2,.grid-3{grid-template-columns:1fr}}
-  @media(max-width:500px){.kpi-grid{grid-template-columns:1fr}.container{padding:16px}}
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F2EDE4;--bg2:#FAF7F2;--bg3:#EDE6D9;--border:#D6CBBA;
+  --accent:#6B8F6B;--accent-dark:#4A6B4A;--accent-light:#A8C5A0;
+  --red:#B85C5C;--text:#3D2B1F;--muted:#8C7B6B;
+  --shadow:0 2px 12px rgba(61,43,31,.08);
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'DM Sans',Arial,sans-serif;
+  --font-mono:'DM Mono','Courier New',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+/* HEADER */
+.page-header{background:var(--accent-dark);border-bottom:3px solid var(--accent);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo-mark{width:38px;height:38px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--accent-dark);font-weight:700;border:2px solid var(--accent-light);flex-shrink:0}
+.page-header h1{font-family:var(--font-display);font-size:22px;letter-spacing:3px;color:#FAF7F2;font-weight:600}
+.page-header .subtitle{font-size:9px;color:var(--accent-light);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.badge{font-size:9px;font-weight:600;padding:3px 10px;border-radius:20px}
+.badge-green{background:rgba(168,197,160,.2);color:#C8E0C0;border:1px solid rgba(168,197,160,.4)}
+.badge-beige{background:rgba(242,237,228,.15);color:#EDE6D9;border:1px solid rgba(242,237,228,.3)}
+/* CONTAINER */
+.container{padding:20px 24px;max-width:1400px;margin:0 auto}
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
+.kpi-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.kpi-value{font-family:var(--font-display);font-size:24px;color:var(--accent-dark);line-height:1;font-weight:700}
+.kpi-value.sm{font-size:16px;padding-top:3px}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:5px}
+.kpi-icon{position:absolute;right:12px;top:10px;font-size:20px;opacity:.25}
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);margin-bottom:16px}
+.card-title{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--border);padding-bottom:8px}
+.card-title span{font-size:9px;color:var(--accent-dark);background:rgba(107,143,107,.1);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)}
+/* GRID LAYOUTS */
+.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+/* TABELA RANKING */
+.rank-table{width:100%;border-collapse:collapse}
+.rank-table th{background:var(--accent-dark);color:#FAF7F2;padding:8px 10px;font-size:8px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;text-align:left}
+.rank-table th.right{text-align:right}
+.rank-table td{padding:7px 10px;font-size:11px;border-bottom:1px solid var(--border)}
+.rank-table td.right{text-align:right;font-family:var(--font-mono);font-size:10px}
+.rank-table td.center{text-align:center}
+.rank-table tr:nth-child(even) td{background:var(--bg3)}
+.rank-table tr:hover td{background:rgba(107,143,107,.08)}
+.rank-num{font-weight:700;color:var(--accent-dark);font-family:var(--font-mono);font-size:12px}
+.rank-1{color:#C8A882}.rank-2{color:#A0A0A0}.rank-3{color:#8B6B4A}
+.nome-garcom{font-weight:600;color:var(--text);font-size:11px}
+.turno-badge{font-size:8px;padding:2px 6px;border-radius:8px;font-weight:600}
+.turno-noite{background:rgba(74,107,74,.15);color:var(--accent-dark)}
+.turno-dia{background:rgba(200,168,130,.2);color:#8B6B4A}
+.turno-na{background:var(--bg3);color:var(--muted)}
+/* META BAR */
+.meta-bar{height:5px;background:var(--border);border-radius:3px;margin-top:4px;overflow:hidden}
+.meta-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light))}
+.meta-fill.over{background:linear-gradient(90deg,#C8A882,#4A6B4A)}
+/* DISTRIBUIÇÃO */
+.dist-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.dist-label{font-size:10px;color:var(--text);font-weight:500;width:120px;flex-shrink:0}
+.dist-bar-wrap{flex:1;background:var(--border);border-radius:3px;height:14px;overflow:hidden;position:relative}
+.dist-bar{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px}
+.dist-val{font-size:9px;color:#FAF7F2;font-weight:600;white-space:nowrap}
+.dist-pct{font-size:10px;color:var(--muted);font-family:var(--font-mono);width:42px;text-align:right;flex-shrink:0}
+/* CHART */
+.chart-wrap{position:relative}
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:14px 24px;display:flex;justify-content:space-between;align-items:center;font-size:9px;color:var(--muted);background:var(--bg3);flex-wrap:wrap;gap:6px}
+.footer strong{color:var(--accent-dark)}
+/* RESPONSIVE */
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .container{padding:14px}
+}
+@media(max-width:500px){
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .kpi-value{font-size:20px}
+}
 </style>
 </head>
 <body>
-<div id="tip"></div>
 
 <header class="page-header">
   <div class="brand">
     <div class="logo-mark">CM</div>
     <div>
       <h1>Cucina Mia</h1>
-      <div class="subtitle">Dashboard de Vendas · 2026</div>
+      <div class="subtitle">Comissões de Garçons · Agosto/26</div>
     </div>
   </div>
-  <div class="header-meta">
-    <span class="badge badge-green">&#9679; Dados Atualizados</span>
-    <span class="period">Jan/26 — Ago/26</span>
-    <span class="badge badge-beige">8 meses</span>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <span class="badge badge-green">&#9679; Ago/2026</span>
+    <span class="badge badge-beige">28 garçons ativos</span>
   </div>
 </header>
 
 <div class="container">
 
+  <!-- KPIs GERAIS -->
   <div class="kpi-grid">
     <div class="kpi">
-      <div class="kpi-label">Faturamento Agosto/26</div>
-      <div class="kpi-value">R$ 2,50M</div>
-      <div class="kpi-delta up">&#9650; +8,8% vs Julho/26</div>
+      <div class="kpi-label">Vendas Totais Líquidas</div>
+      <div class="kpi-value">R$ 2,28M</div>
+      <div class="kpi-sub">Agosto/2026</div>
       <div class="kpi-icon">💰</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Melhor Grupo · Julho/26</div>
-      <div class="kpi-value sm">Risotos</div>
-      <div class="kpi-delta up">&#9650; R$ 440k — 19% do total</div>
-      <div class="kpi-icon">🏆</div>
+      <div class="kpi-label">Total Comissões Garçons (70%)</div>
+      <div class="kpi-value">R$ 158,1k</div>
+      <div class="kpi-sub">Garçom recebe 70% do serviço</div>
+      <div class="kpi-icon">👨‍🍳</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Top Produto · Agosto/26</div>
-      <div class="kpi-value sm">Filet Fettuccine</div>
-      <div class="kpi-delta up">&#9650; R$ 105,9k — 1º lugar</div>
-      <div class="kpi-icon">🍝</div>
+      <div class="kpi-label">Taxa de Serviço (10%)</div>
+      <div class="kpi-value">R$ 226,2k</div>
+      <div class="kpi-sub">Cozinha 26% · Casa 4%</div>
+      <div class="kpi-icon">📊</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Acumulado 2026</div>
-      <div class="kpi-value">R$ 19,1M</div>
-      <div class="kpi-delta up">&#9650; Jan–Ago/26</div>
-      <div class="kpi-icon">📈</div>
+      <div class="kpi-label">Ticket Médio Geral</div>
+      <div class="kpi-value sm">R$ 191,20</div>
+      <div class="kpi-sub">Calculado dia a dia por turno</div>
+      <div class="kpi-icon">🎯</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total de Mesas</div>
+      <div class="kpi-value sm">5.098</div>
+      <div class="kpi-sub">Total de lançamentos: 36.196</div>
+      <div class="kpi-icon">🍽️</div>
     </div>
   </div>
 
+  <!-- DISTRIBUIÇÃO COMISSÃO + GRÁFICO TOP VENDAS -->
   <div class="grid-2">
+    <!-- GRÁFICO TOP 10 VENDAS -->
     <div class="card">
-      <div class="card-title">Faturamento Mensal por Grupo <span>Jan – Ago/26</span></div>
-      <div class="chart-wrap" style="height:240px"><canvas id="chartEvolucao"></canvas></div>
-      <div class="legend" id="legendEvolucao"></div>
+      <div class="card-title">Ranking de Vendas — Top 10 Garçons <span>R$ vendido</span></div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chartVendas"></canvas></div>
     </div>
+    <!-- DISTRIBUIÇÃO -->
     <div class="card">
-      <div class="card-title">Top 10 Produtos <span>Agosto/26</span></div>
-      <div id="top10"></div>
+      <div class="card-title">Distribuição da Taxa de Serviço <span>Ago/26</span></div>
+      <div style="margin-bottom:18px">
+        <div class="dist-row">
+          <div class="dist-label">Garçom (70%)</div>
+          <div class="dist-bar-wrap"><div class="dist-bar" style="width:70%;background:#4A6B4A"><span class="dist-val">R$ 158.147</span></div></div>
+          <div class="dist-pct">70,0%</div>
+        </div>
+        <div class="dist-row">
+          <div class="dist-label">Cozinha (26%)</div>
+          <div class="dist-bar-wrap"><div class="dist-bar" style="width:26%;background:#6B8F6B"><span class="dist-val">R$ 58.811</span></div></div>
+          <div class="dist-pct">26,0%</div>
+        </div>
+        <div class="dist-row">
+          <div class="dist-label">Casa (4%)</div>
+          <div class="dist-bar-wrap"><div class="dist-bar" style="width:4%;background:#A8C5A0;min-width:85px"><span class="dist-val">R$ 9.048</span></div></div>
+          <div class="dist-pct">4,0%</div>
+        </div>
+      </div>
+      <div class="card-title" style="margin-top:14px">Ticket Médio — Top 10 <span>R$ por pessoa</span></div>
+      <div class="chart-wrap" style="height:180px"><canvas id="chartTicket"></canvas></div>
     </div>
   </div>
 
+  <!-- GRÁFICO COMISSÃO GARÇOM -->
+  <div class="card">
+    <div class="card-title">Comissão Individual por Garçom <span>R$</span></div>
+    <div class="chart-wrap" style="height:220px"><canvas id="chartComissao"></canvas></div>
+  </div>
+
+  <!-- TABELA RANKING COMPLETO -->
+  <div class="card">
+    <div class="card-title">Ranking Completo — Garçons Ativos <span>Agosto/26</span></div>
+    <div style="overflow-x:auto">
+      <table class="rank-table" id="tabelaRanking"></table>
+    </div>
+  </div>
+
+  <!-- TURNO + MESAS -->
   <div class="grid-3">
     <div class="card">
-      <div class="card-title">Share por Grupo <span>Agosto/26</span></div>
-      <div style="display:flex;gap:12px;align-items:center">
-        <div class="chart-wrap" style="height:210px;width:180px;flex-shrink:0"><canvas id="chartGrupos"></canvas></div>
-        <div id="legendGrupos" style="flex:1;display:flex;flex-direction:column;gap:5px"></div>
-      </div>
+      <div class="card-title">Vendas por Turno <span>Ago/26</span></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chartTurno"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Evolução Faturamento Bruto <span>R$ mensal</span></div>
-      <div class="chart-wrap" style="height:210px"><canvas id="chartTotal"></canvas></div>
+      <div class="card-title">Mesas Atendidas — Top 10 <span>qtd.</span></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chartMesas"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Variação MoM por Grupo <span>Ago vs Jul</span></div>
-      <div id="momBars" style="overflow-y:auto;max-height:230px;padding-right:4px"></div>
+      <div class="card-title">Itens por Mesa <span>média</span></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chartItens"></canvas></div>
     </div>
   </div>
 
 </div>
 
 <footer class="footer">
-  <div>Gerado por <strong>Claude AI</strong> · Dados: modelo semântico CUCINA MIA 2026</div>
-  <div>Jan/2026 – Jul/2026 · 13 grupos · 8 meses</div>
+  <div>Gerado por <strong>Claude AI</strong> · Fonte: Sistema TOTVS Chef — CUCINA MIA</div>
+  <div>Comissões Agosto/2026 · Confidencial</div>
 </footer>
 
 <script>
-const meses = ['Jan/26','Fev/26','Mar/26','Abr/26','Mai/26','Jun/26','Jul/26','Ago/26'];
-
-// Jan/26  Fev/26  Mar/26  Abr/26  Mai/26  Jun/26  Jul/26  Ago/26
-const grupos = {
-  'Risotos':       [383715, 357434, 432324, 442443, 520728, 362933, 439953, 473881],
-  'Piatti':        [330040, 270081, 340995, 333638, 397302, 268936, 240309, 256440],
-  'Esp. Claude':   [219377, 200982, 247150, 230852, 277307, 175927, 187578, 196761],
-  'Adega':         [208018, 185005, 265079, 223753, 255915, 200286, 199948, 209478],
-  'Para Beliscar': [165479, 154259, 223077, 181811, 207214, 151591, 155199, 185040],
-  'Executivo':     [186707, 151495, 152979, 164420, 156901, 136079, 212815, 167099],
-  'Antipasti':     [123478, 105308, 139809, 134192, 144198, 102432, 122276, 146978],
-  'Cervejas':      [112409,  90830, 136809,  99096, 115822,  71795,  88839, 117919],
-  'Bebidas':       [ 66803,  62595,  83877, 113316,  81913,  87818,  64444,  70849],
-  'Drinks':        [ 96000,  87695, 116825,  93545, 123738,  72661,  95765, 111840],
-  'Eventos':       [ 25619,  38584,  57984, 147756,  46208, 102432,  11541,  63008],
-  'Dolce':         [ 41507,  36908,  42305,  44895,  49094,  36555,  38818,  40088],
-  'Cafe':          [  8255,   8798,  11679,   9931,  11014,   8388,   9837,   9360],
-};
-
-// Faturamentos brutos reais
-const fatBruto = [2270644, 2021571, 2593367, 2528653, 2773233, 2137994, 2297776, 2500663];
-
-const cores = ['#6B8F6B','#A8C5A0','#4A6B4A','#C8A882','#8B6B4A','#D4B896','#7A9E7A','#B8906A','#5A7A5A','#C4A070','#9AB89A','#A07850','#3D6B3D'];
-
-const top10Jun = [
-  {n:'Filet Fettuccine Alfredo Gratinado', v:105909},
-  {n:'Filet au Poivre',                    v: 83589},
-  {n:'Filet a Parmegiana',                 v: 61446},
-  {n:'Lasanha da Minha Avo Anna',          v: 55762},
-  {n:'Chopp Brahma Caneca',                v: 54740},
-  {n:'Risotto de Camarao Especial',        v: 53127},
-  {n:'Filet Gnocchi Trufado',              v: 47084},
-  {n:'Peixe com Banana Esp. CT',          v: 44505},
-  {n:'Prime Rib',                          v: 41220},
-  {n:'Chopp Brahma Tulipa',               v: 41202},
+// DADOS
+const garcons = [
+  {cod:274, nome:'Luis Henrique Coutinho',    turno:'—',     vendas:137092, servico:13873, comissao:9711,  cozinha:3607, ticket:205.07, mesas:405, clientes:669, itens:3116, itensMesa:7.69},
+  {cod:249, nome:'Antonio Povoas da Silva',   turno:'NOITE', vendas:126899, servico:12954, comissao:9068,  cozinha:3368, ticket:165.58, mesas:362, clientes:766, itens:2881, itensMesa:7.96},
+  {cod:232, nome:'Rafael dos Santos Dias',    turno:'NOITE', vendas:121435, servico:11984, comissao:8389,  cozinha:3116, ticket:188.55, mesas:341, clientes:644, itens:2750, itensMesa:8.06},
+  {cod:244, nome:'Lutson Pereira Brito',      turno:'NOITE', vendas:118827, servico:11845, comissao:8292,  cozinha:3080, ticket:184.13, mesas:342, clientes:645, itens:2566, itensMesa:7.50},
+  {cod:266, nome:'Maicon Silva dos Santos',   turno:'—',     vendas:106109, servico:10542, comissao:7380,  cozinha:2741, ticket:147.38, mesas:291, clientes:720, itens:2553, itensMesa:8.77},
+  {cod:207, nome:'Joao dos Santos Araujo',    turno:'NOITE', vendas:104125, servico:10277, comissao:7194,  cozinha:2672, ticket:151.47, mesas:299, clientes:687, itens:2264, itensMesa:7.57},
+  {cod:241, nome:'Domingos Carlos Gomes',     turno:'NOITE', vendas:98210,  servico:9803,  comissao:6862,  cozinha:2549, ticket:148.44, mesas:257, clientes:662, itens:1893, itensMesa:7.37},
+  {cod:270, nome:'Marcelo de Sousa Lima',     turno:'—',     vendas:97981,  servico:9367,  comissao:6557,  cozinha:2435, ticket:194.12, mesas:273, clientes:505, itens:1771, itensMesa:6.49},
+  {cod:265, nome:'Jaime Flavio Nunes',        turno:'—',     vendas:96447,  servico:9734,  comissao:6814,  cozinha:2531, ticket:210.68, mesas:264, clientes:458, itens:1941, itensMesa:7.35},
+  {cod:206, nome:'Ismael Sousa dos Santos',   turno:'NOITE', vendas:90239,  servico:9248,  comissao:6474,  cozinha:2404, ticket:179.35, mesas:199, clientes:503, itens:1653, itensMesa:8.31},
+  {cod:221, nome:'Welton Pereira da Silva',   turno:'NOITE', vendas:84952,  servico:8004,  comissao:5603,  cozinha:2081, ticket:183.42, mesas:203, clientes:463, itens:1771, itensMesa:8.72},
+  {cod:245, nome:'Francisco de Assis',        turno:'DIA',   vendas:84707,  servico:8417,  comissao:5892,  cozinha:2188, ticket:194.33, mesas:241, clientes:436, itens:1980, itensMesa:8.22},
+  {cod:272, nome:'Gabriel dos Santos Matos',  turno:'—',     vendas:78974,  servico:7856,  comissao:5499,  cozinha:2043, ticket:177.87, mesas:236, clientes:444, itens:1719, itensMesa:7.28},
+  {cod:225, nome:'Francisco Ribeiro Araujo',  turno:'NOITE', vendas:78776,  servico:7892,  comissao:5525,  cozinha:2052, ticket:193.45, mesas:231, clientes:407, itens:1747, itensMesa:7.56},
+  {cod:260, nome:'Flavia Vitoria Alves',      turno:'—',     vendas:77774,  servico:7703,  comissao:5392,  cozinha:2003, ticket:139.42, mesas:233, clientes:558, itens:1820, itensMesa:7.81},
+  {cod:223, nome:'Wilson Souza Santana',      turno:'NOITE', vendas:77443,  servico:7707,  comissao:5395,  cozinha:2004, ticket:168.26, mesas:214, clientes:460, itens:1555, itensMesa:7.27},
+  {cod:250, nome:'Elson Alves',               turno:'NOITE', vendas:77419,  servico:7829,  comissao:5480,  cozinha:2035, ticket:169.66, mesas:236, clientes:456, itens:1727, itensMesa:7.32},
+  {cod:261, nome:'Weverton Carvalho',         turno:'—',     vendas:72848,  servico:7335,  comissao:5134,  cozinha:1907, ticket:164.55, mesas:204, clientes:443, itens:1640, itensMesa:8.04},
+  {cod:273, nome:'Aldiano Marques Pinheiro',  turno:'—',     vendas:64262,  servico:6422,  comissao:4495,  cozinha:1670, ticket:182.02, mesas:181, clientes:353, itens:1366, itensMesa:7.55},
+  {cod:259, nome:'Jeova Vieira Fernandes',    turno:'—',     vendas:64121,  servico:6347,  comissao:4443,  cozinha:1650, ticket:202.76, mesas:178, clientes:316, itens:1520, itensMesa:8.54},
+  {cod:251, nome:'Leonardo Ferreira Filho',   turno:'DIA',   vendas:62905,  servico:6251,  comissao:4376,  cozinha:1625, ticket:147.78, mesas:184, clientes:426, itens:1530, itensMesa:8.32},
+  {cod:271, nome:'Marlete Costa da Mota',     turno:'—',     vendas:60271,  servico:5976,  comissao:4183,  cozinha:1554, ticket:179.74, mesas:178, clientes:335, itens:1430, itensMesa:8.03},
+  {cod:218, nome:'Shelton Souza Oliveira',    turno:'DIA',   vendas:59080,  servico:5877,  comissao:4114,  cozinha:1528, ticket:149.87, mesas:169, clientes:394, itens:1407, itensMesa:8.33},
+  {cod:211, nome:'Luis Fernando Siqueira',    turno:'DIA',   vendas:55574,  servico:5509,  comissao:3856,  cozinha:1432, ticket:156.59, mesas:141, clientes:355, itens:1172, itensMesa:8.31},
+  {cod:239, nome:'Diana Teixeira Carvalho',   turno:'NOITE', vendas:50030,  servico:4934,  comissao:3454,  cozinha:1283, ticket:158.02, mesas:168, clientes:317, itens:1224, itensMesa:7.29},
+  {cod:258, nome:'Arthur Rodrigues',          turno:'DIA',   vendas:38842,  servico:3905,  comissao:2734,  cozinha:1015, ticket:213.31, mesas:93,  clientes:182, itens:866,  itensMesa:9.31},
+  {cod:231, nome:'Belem Elson',               turno:'NOITE', vendas:35478,  servico:3565,  comissao:2495,  cozinha:927,  ticket:206.55, mesas:109, clientes:172, itens:735,  itensMesa:6.74},
+  {cod:262, nome:'Saulo Jose Santos Costa',   turno:'—',     vendas:13721,  servico:1374,  comissao:961,   cozinha:357,  ticket:213.54, mesas:32,  clientes:64,  itens:259,  itensMesa:8.09},
 ];
 
-const gNomes = Object.keys(grupos);
+const fmtR = v => 'R$ '+Math.round(v).toLocaleString('pt-BR');
+const fmtK = v => 'R$'+(v/1000).toFixed(1).replace('.',',')+'k';
 
 const tt = {backgroundColor:'#4A6B4A',borderColor:'#6B8F6B',borderWidth:1,titleColor:'#FAF7F2',bodyColor:'#C8E0C0',padding:10};
-Chart.defaults.color='#8C7B6B';Chart.defaults.borderColor='#D6CBBA';Chart.defaults.font.family="'DM Sans',sans-serif";
+Chart.defaults.color='#8C7B6B'; Chart.defaults.borderColor='#D6CBBA';
+Chart.defaults.font.family="'DM Sans',sans-serif";
 
-// Barras empilhadas
-new Chart(document.getElementById('chartEvolucao'),{
+const top10 = garcons.slice(0,10);
+const nomes10 = top10.map(g=>g.nome.split(' ').slice(0,2).join(' '));
+
+// GRÁFICO VENDAS TOP 10
+new Chart(document.getElementById('chartVendas'),{
   type:'bar',
-  data:{labels:meses,datasets:gNomes.map((g,i)=>({label:g,data:grupos[g],backgroundColor:cores[i]+'dd',borderColor:cores[i],borderWidth:0,stack:'a'}))},
-  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>` ${ctx.dataset.label}: R$${(ctx.raw/1000).toFixed(0)}k`}}},
-    scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:'#E8DFD0'},ticks:{font:{size:10},callback:v=>'R$'+(v/1000000).toFixed(1)+'M'}}}}
+  data:{labels:nomes10,datasets:[{
+    label:'Vendas',
+    data:top10.map(g=>g.vendas),
+    backgroundColor:top10.map((_,i)=>i===0?'#4A6B4A':i===1?'#6B8F6B':i===2?'#8B6B4A':'#A8C5A0'),
+    borderRadius:4,borderSkipped:false
+  }]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>` ${fmtK(ctx.raw)}`}}},
+    scales:{x:{grid:{color:'#E8DFD0'},ticks:{callback:v=>fmtK(v),font:{size:9}}},
+      y:{grid:{display:false},ticks:{font:{size:10}}}}}
 });
 
-const legEl = document.getElementById('legendEvolucao');
-gNomes.forEach((g,i)=>{legEl.innerHTML+=`<span class="leg-item"><span class="leg-dot" style="background:${cores[i]}"></span>${g}</span>`;});
-
-// Top 10
-const maxVal=top10Jun[0].v;
-const t10el=document.getElementById('top10');
-top10Jun.forEach((p,i)=>{
-  const pct=(p.v/maxVal*100).toFixed(0);
-  t10el.innerHTML+=`<div class="top10-row"><span class="top10-rank">${i+1}</span><div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between;align-items:center"><span class="top10-name">${p.n}</span><span class="top10-val">R$${(p.v/1000).toFixed(1)}k</span></div><div class="top10-bar"><div class="top10-bar-fill" style="width:${pct}%"></div></div></div></div>`;
+// GRÁFICO TICKET MÉDIO TOP 10
+new Chart(document.getElementById('chartTicket'),{
+  type:'bar',
+  data:{labels:nomes10,datasets:[{
+    label:'Ticket Médio',
+    data:top10.map(g=>g.ticket),
+    backgroundColor:'#C8A882',borderRadius:3,borderSkipped:false
+  }]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>`R$ ${ctx.raw.toFixed(2).replace('.',',')}`}}},
+    scales:{x:{grid:{color:'#E8DFD0'},ticks:{callback:v=>'R$'+v,font:{size:9}}},
+      y:{grid:{display:false},ticks:{font:{size:9}}}}}
 });
 
-// Rosca Agosto
-const roscaData=gNomes.map(g=>grupos[g][7]);
-const roscaTotal=roscaData.reduce((a,b)=>a+b,0);
-new Chart(document.getElementById('chartGrupos'),{
+// GRÁFICO COMISSÃO TODOS
+const cores28 = garcons.map((_,i)=>{
+  const pct = i/garcons.length;
+  return `rgba(74,107,74,${1-pct*0.6})`;
+});
+new Chart(document.getElementById('chartComissao'),{
+  type:'bar',
+  data:{labels:garcons.map(g=>g.nome.split(' ').slice(0,2).join(' ')),
+    datasets:[{label:'Comissão (70%)',data:garcons.map(g=>g.comissao),
+      backgroundColor:cores28,borderRadius:3,borderSkipped:false}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>` ${fmtK(ctx.raw)}`}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:8},maxRotation:45}},
+      y:{grid:{color:'#E8DFD0'},ticks:{callback:v=>fmtK(v),font:{size:9}}}}}
+});
+
+// TURNO
+const turnos = {NOITE:0,DIA:0,'—':0};
+garcons.forEach(g=>{
+  if(g.turno==='NOITE') turnos.NOITE+=g.vendas;
+  else if(g.turno==='DIA') turnos.DIA+=g.vendas;
+  else turnos['—']+=g.vendas;
+});
+new Chart(document.getElementById('chartTurno'),{
   type:'doughnut',
-  data:{labels:gNomes,datasets:[{data:roscaData,backgroundColor:cores,borderColor:'#FAF7F2',borderWidth:2,hoverOffset:6}]},
-  options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>` R$${(ctx.raw/1000).toFixed(0)}k — ${(ctx.raw/roscaTotal*100).toFixed(1)}%`}}}}
-});
-const legGrupos=document.getElementById('legendGrupos');
-gNomes.forEach((g,i)=>{
-  const val=grupos[g][7],pct=(val/roscaTotal*100).toFixed(1);
-  legGrupos.innerHTML+=`<div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:${cores[i]};flex-shrink:0"></span><span style="font-size:10px;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g}</span><span style="font-size:10px;font-family:var(--font-mono);color:var(--accent-dark);font-weight:600">${pct}%</span></div>`;
-});
-
-// Linha faturamento bruto real
-new Chart(document.getElementById('chartTotal'),{
-  type:'line',
-  data:{labels:meses,datasets:[{label:'Fat.Bruto',data:fatBruto,borderColor:'#4A6B4A',backgroundColor:'rgba(107,143,107,.1)',borderWidth:2.5,fill:true,tension:0.4,pointBackgroundColor:'#6B8F6B',pointBorderColor:'#FAF7F2',pointBorderWidth:2,pointRadius:5,pointHoverRadius:7}]},
-  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>` R$${(ctx.raw/1000000).toFixed(2)}M`}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'#E8DFD0'},ticks:{font:{size:10},callback:v=>'R$'+(v/1000000).toFixed(1)+'M'}}}}
+  data:{labels:['Noite','Dia','Não definido'],
+    datasets:[{data:[turnos.NOITE,turnos.DIA,turnos['—']],
+      backgroundColor:['#4A6B4A','#C8A882','#A8C5A0'],
+      borderColor:'#FAF7F2',borderWidth:2,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}},
+    tooltip:{...tt,callbacks:{label:ctx=>` ${fmtK(ctx.raw)} (${(ctx.raw/garcons.reduce((a,g)=>a+g.vendas,0)*100).toFixed(1)}%)`}}}}
 });
 
-// MoM Ago vs Jul — índice 6=Jul, índice 7=Ago
-const momData=gNomes.map(g=>{
-  const jun=grupos[g][6], jul=grupos[g][7];
-  return{g, pct:((jul-jun)/jun*100), mai:jun, jun:jul};
-}).sort((a,b)=>b.pct-a.pct);
-const momEl=document.getElementById('momBars');
-momEl.style.overflowY='auto';
-momEl.style.maxHeight='none';
-momData.forEach(d=>{
-  const v=d.pct, cor=v>=0?'#4A6B4A':'#B85C5C', bw=Math.min(Math.abs(v)*0.6,100), sign=v>0?'+':'';
-  const fmtK=n=>'R$'+(n/1000).toFixed(1)+'k';
-  momEl.innerHTML+=`<div class="mom-row"><div class="mom-header"><span class="mom-label">${d.g}</span><div class="mom-vals"><span class="mom-mar">${fmtK(d.mai)}</span><span class="mom-arrow">→</span><span class="mom-abr">${fmtK(d.jun)}</span><span class="mom-pct" style="color:${cor}">${sign}${v.toFixed(1)}%</span></div></div><div class="mom-track"><div class="mom-fill" style="width:${bw}%;background:${cor}"></div></div></div>`;
+// MESAS TOP 10
+new Chart(document.getElementById('chartMesas'),{
+  type:'bar',
+  data:{labels:nomes10,datasets:[{label:'Mesas',data:top10.map(g=>g.mesas),
+    backgroundColor:'#6B8F6B',borderRadius:3,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>` ${ctx.raw} mesas`}}},
+    scales:{x:{grid:{color:'#E8DFD0'},ticks:{font:{size:9}}},
+      y:{grid:{display:false},ticks:{font:{size:10}}}}}
 });
+
+// ITENS POR MESA TOP 10
+new Chart(document.getElementById('chartItens'),{
+  type:'bar',
+  data:{labels:nomes10,datasets:[{label:'Itens/Mesa',data:top10.map(g=>g.itensMesa),
+    backgroundColor:top10.map(g=>g.itensMesa>=8?'#4A6B4A':'#A8C5A0'),
+    borderRadius:3,borderSkipped:false}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{...tt,callbacks:{label:ctx=>` ${ctx.raw.toFixed(2)} itens/mesa`}}},
+    scales:{x:{grid:{color:'#E8DFD0'},min:5,ticks:{font:{size:9}}},
+      y:{grid:{display:false},ticks:{font:{size:10}}}}}
+});
+
+// TABELA RANKING
+const tabela = document.getElementById('tabelaRanking');
+const metaRef = 58357.59;
+tabela.innerHTML = `<thead><tr>
+  <th>#</th><th>Garçom</th><th>Turno</th>
+  <th class="right">Vendas</th><th class="right">Serviço (10%)</th>
+  <th class="right">Comissão (70%)</th><th class="right">Ticket Médio</th>
+  <th class="right">Mesas</th><th class="right">Clientes</th><th class="right">Itens</th>
+  <th>Progresso Meta</th>
+</tr></thead>`;
+const tbody = document.createElement('tbody');
+garcons.forEach((g,i)=>{
+  const pctMeta = Math.min((g.vendas/metaRef)*100,150);
+  const tc = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+  const tbadge = g.turno==='NOITE'?'turno-noite':g.turno==='DIA'?'turno-dia':'turno-na';
+  const tlbl = g.turno==='—'?'N/D':g.turno;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="center rank-num ${tc}">${i+1}</td>
+    <td><span class="nome-garcom">${g.nome}</span></td>
+    <td class="center"><span class="turno-badge ${tbadge}">${tlbl}</span></td>
+    <td class="right">${fmtK(g.vendas)}</td>
+    <td class="right">${fmtK(g.servico)}</td>
+    <td class="right" style="color:var(--accent-dark);font-weight:700">${fmtK(g.comissao)}</td>
+    <td class="right">R$ ${g.ticket.toFixed(2).replace('.',',')}</td>
+    <td class="right">${g.mesas}</td>
+    <td class="right">${g.clientes.toLocaleString('pt-BR')}</td>
+    <td class="right">${g.itens.toLocaleString('pt-BR')}</td>
+    <td style="min-width:100px;padding-right:14px">
+      <div style="font-size:9px;color:var(--muted);margin-bottom:2px">${pctMeta.toFixed(0)}% da meta</div>
+      <div class="meta-bar"><div class="meta-fill ${pctMeta>=100?'over':''}" style="width:${Math.min(pctMeta,100)}%"></div></div>
+    </td>`;
+  tbody.appendChild(tr);
+});
+tabela.appendChild(tbody);
 </script>
 </body>
 </html>
