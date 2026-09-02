@@ -213,34 +213,34 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 <script>
 // DADOS
 const garcons = [
-  {cod:274, nome:'Luis Henrique Coutinho',    turno:'—',     vendas:137092, servico:13873, comissao:9711,  cozinha:3607, ticket:205.07, mesas:405, clientes:669, itens:3116, itensMesa:7.69},
+  {cod:274, nome:'Luis Henrique Coutinho',    turno:'DIA',     vendas:137092, servico:13873, comissao:9711,  cozinha:3607, ticket:205.07, mesas:405, clientes:669, itens:3116, itensMesa:7.69},
   {cod:249, nome:'Antonio Povoas da Silva',   turno:'NOITE', vendas:126899, servico:12954, comissao:9068,  cozinha:3368, ticket:165.58, mesas:362, clientes:766, itens:2881, itensMesa:7.96},
   {cod:232, nome:'Rafael dos Santos Dias',    turno:'NOITE', vendas:121435, servico:11984, comissao:8389,  cozinha:3116, ticket:188.55, mesas:341, clientes:644, itens:2750, itensMesa:8.06},
   {cod:244, nome:'Lutson Pereira Brito',      turno:'NOITE', vendas:118827, servico:11845, comissao:8292,  cozinha:3080, ticket:184.13, mesas:342, clientes:645, itens:2566, itensMesa:7.50},
-  {cod:266, nome:'Maicon Silva dos Santos',   turno:'—',     vendas:106109, servico:10542, comissao:7380,  cozinha:2741, ticket:147.38, mesas:291, clientes:720, itens:2553, itensMesa:8.77},
+  {cod:266, nome:'Maicon Silva dos Santos',   turno:'DIA',     vendas:106109, servico:10542, comissao:7380,  cozinha:2741, ticket:147.38, mesas:291, clientes:720, itens:2553, itensMesa:8.77},
   {cod:207, nome:'Joao dos Santos Araujo',    turno:'NOITE', vendas:104125, servico:10277, comissao:7194,  cozinha:2672, ticket:151.47, mesas:299, clientes:687, itens:2264, itensMesa:7.57},
   {cod:241, nome:'Domingos Carlos Gomes',     turno:'NOITE', vendas:98210,  servico:9803,  comissao:6862,  cozinha:2549, ticket:148.44, mesas:257, clientes:662, itens:1893, itensMesa:7.37},
-  {cod:270, nome:'Marcelo de Sousa Lima',     turno:'—',     vendas:97981,  servico:9367,  comissao:6557,  cozinha:2435, ticket:194.12, mesas:273, clientes:505, itens:1771, itensMesa:6.49},
-  {cod:265, nome:'Jaime Flavio Nunes',        turno:'—',     vendas:96447,  servico:9734,  comissao:6814,  cozinha:2531, ticket:210.68, mesas:264, clientes:458, itens:1941, itensMesa:7.35},
+  {cod:270, nome:'Marcelo de Sousa Lima',     turno:'NOITE',     vendas:97981,  servico:9367,  comissao:6557,  cozinha:2435, ticket:194.12, mesas:273, clientes:505, itens:1771, itensMesa:6.49},
+  {cod:265, nome:'Jaime Flavio Nunes',        turno:'NOITE',     vendas:96447,  servico:9734,  comissao:6814,  cozinha:2531, ticket:210.68, mesas:264, clientes:458, itens:1941, itensMesa:7.35},
   {cod:206, nome:'Ismael Sousa dos Santos',   turno:'NOITE', vendas:90239,  servico:9248,  comissao:6474,  cozinha:2404, ticket:179.35, mesas:199, clientes:503, itens:1653, itensMesa:8.31},
   {cod:221, nome:'Welton Pereira da Silva',   turno:'NOITE', vendas:84952,  servico:8004,  comissao:5603,  cozinha:2081, ticket:183.42, mesas:203, clientes:463, itens:1771, itensMesa:8.72},
   {cod:245, nome:'Francisco de Assis',        turno:'DIA',   vendas:84707,  servico:8417,  comissao:5892,  cozinha:2188, ticket:194.33, mesas:241, clientes:436, itens:1980, itensMesa:8.22},
-  {cod:272, nome:'Gabriel dos Santos Matos',  turno:'—',     vendas:78974,  servico:7856,  comissao:5499,  cozinha:2043, ticket:177.87, mesas:236, clientes:444, itens:1719, itensMesa:7.28},
+  {cod:272, nome:'Gabriel dos Santos Matos',  turno:'NOITE',     vendas:78974,  servico:7856,  comissao:5499,  cozinha:2043, ticket:177.87, mesas:236, clientes:444, itens:1719, itensMesa:7.28},
   {cod:225, nome:'Francisco Ribeiro Araujo',  turno:'NOITE', vendas:78776,  servico:7892,  comissao:5525,  cozinha:2052, ticket:193.45, mesas:231, clientes:407, itens:1747, itensMesa:7.56},
-  {cod:260, nome:'Flavia Vitoria Alves',      turno:'—',     vendas:77774,  servico:7703,  comissao:5392,  cozinha:2003, ticket:139.42, mesas:233, clientes:558, itens:1820, itensMesa:7.81},
+  {cod:260, nome:'Flavia Vitoria Alves',      turno:'DIA',     vendas:77774,  servico:7703,  comissao:5392,  cozinha:2003, ticket:139.42, mesas:233, clientes:558, itens:1820, itensMesa:7.81},
   {cod:223, nome:'Wilson Souza Santana',      turno:'NOITE', vendas:77443,  servico:7707,  comissao:5395,  cozinha:2004, ticket:168.26, mesas:214, clientes:460, itens:1555, itensMesa:7.27},
   {cod:250, nome:'Elson Alves',               turno:'NOITE', vendas:77419,  servico:7829,  comissao:5480,  cozinha:2035, ticket:169.66, mesas:236, clientes:456, itens:1727, itensMesa:7.32},
-  {cod:261, nome:'Weverton Carvalho',         turno:'—',     vendas:72848,  servico:7335,  comissao:5134,  cozinha:1907, ticket:164.55, mesas:204, clientes:443, itens:1640, itensMesa:8.04},
-  {cod:273, nome:'Aldiano Marques Pinheiro',  turno:'—',     vendas:64262,  servico:6422,  comissao:4495,  cozinha:1670, ticket:182.02, mesas:181, clientes:353, itens:1366, itensMesa:7.55},
-  {cod:259, nome:'Jeova Vieira Fernandes',    turno:'—',     vendas:64121,  servico:6347,  comissao:4443,  cozinha:1650, ticket:202.76, mesas:178, clientes:316, itens:1520, itensMesa:8.54},
+  {cod:261, nome:'Weverton Carvalho',         turno:'NOITE',     vendas:72848,  servico:7335,  comissao:5134,  cozinha:1907, ticket:164.55, mesas:204, clientes:443, itens:1640, itensMesa:8.04},
+  {cod:273, nome:'Aldiano Marques Pinheiro',  turno:'DIA',     vendas:64262,  servico:6422,  comissao:4495,  cozinha:1670, ticket:182.02, mesas:181, clientes:353, itens:1366, itensMesa:7.55},
+  {cod:259, nome:'Jeova Vieira Fernandes',    turno:'NOITE',     vendas:64121,  servico:6347,  comissao:4443,  cozinha:1650, ticket:202.76, mesas:178, clientes:316, itens:1520, itensMesa:8.54},
   {cod:251, nome:'Leonardo Ferreira Filho',   turno:'DIA',   vendas:62905,  servico:6251,  comissao:4376,  cozinha:1625, ticket:147.78, mesas:184, clientes:426, itens:1530, itensMesa:8.32},
-  {cod:271, nome:'Marlete Costa da Mota',     turno:'—',     vendas:60271,  servico:5976,  comissao:4183,  cozinha:1554, ticket:179.74, mesas:178, clientes:335, itens:1430, itensMesa:8.03},
+  {cod:271, nome:'Marlete Costa da Mota',     turno:'DIA',     vendas:60271,  servico:5976,  comissao:4183,  cozinha:1554, ticket:179.74, mesas:178, clientes:335, itens:1430, itensMesa:8.03},
   {cod:218, nome:'Shelton Souza Oliveira',    turno:'DIA',   vendas:59080,  servico:5877,  comissao:4114,  cozinha:1528, ticket:149.87, mesas:169, clientes:394, itens:1407, itensMesa:8.33},
   {cod:211, nome:'Luis Fernando Siqueira',    turno:'DIA',   vendas:55574,  servico:5509,  comissao:3856,  cozinha:1432, ticket:156.59, mesas:141, clientes:355, itens:1172, itensMesa:8.31},
   {cod:239, nome:'Diana Teixeira Carvalho',   turno:'NOITE', vendas:50030,  servico:4934,  comissao:3454,  cozinha:1283, ticket:158.02, mesas:168, clientes:317, itens:1224, itensMesa:7.29},
   {cod:258, nome:'Arthur Rodrigues',          turno:'DIA',   vendas:38842,  servico:3905,  comissao:2734,  cozinha:1015, ticket:213.31, mesas:93,  clientes:182, itens:866,  itensMesa:9.31},
   {cod:231, nome:'Belem Elson',               turno:'NOITE', vendas:35478,  servico:3565,  comissao:2495,  cozinha:927,  ticket:206.55, mesas:109, clientes:172, itens:735,  itensMesa:6.74},
-  {cod:262, nome:'Saulo Jose Santos Costa',   turno:'—',     vendas:13721,  servico:1374,  comissao:961,   cozinha:357,  ticket:213.54, mesas:32,  clientes:64,  itens:259,  itensMesa:8.09},
+  {cod:262, nome:'Saulo Jose Santos Costa',   turno:'DIA',     vendas:13721,  servico:1374,  comissao:961,   cozinha:357,  ticket:213.54, mesas:32,  clientes:64,  itens:259,  itensMesa:8.09},
 ];
 
 const fmtR = v => 'R$ '+Math.round(v).toLocaleString('pt-BR');
@@ -377,3 +377,4 @@ tabela.appendChild(tbody);
 </script>
 </body>
 </html>
+
